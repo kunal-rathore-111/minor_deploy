@@ -13,7 +13,17 @@ const signin = async (req, res) => {
 
     // jwt generation
     const token = createToken(userId);
-    res.cookie("token", token);
+    
+    // Set cookie with proper options for cross-origin
+    const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' for cross-origin in production
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+        path: '/'
+    };
+    
+    res.cookie("token", token, cookieOptions);
     res.json({ message: "Sign-in successfull" });
 
     // after signIn redirect to the home from fronted not here

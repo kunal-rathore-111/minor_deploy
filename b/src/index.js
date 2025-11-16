@@ -17,13 +17,29 @@ try {
 
 const allowedOrigins = [
     "https://minor-deploy-64gx.vercel.app", //  frontend
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost:5174" // Additional local dev port
 ];
 
+// CORS configuration
 app.use(cors({
-    origin: allowedOrigins,
-    credentials: true
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.warn(`CORS blocked request from origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Disposition']
 }));
+
 app.set('trust proxy', 1); // Important for cookies on Vercel
 
 const PORT = process.env.PORT || 3000;
