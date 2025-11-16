@@ -1,4 +1,3 @@
-
 const API_KEY = process.env.GEMINI_API;
 
 async function summaryAgent(searchAgentAns, query) {
@@ -33,6 +32,15 @@ async function summaryAgent(searchAgentAns, query) {
         Papers: ${dataInString}
         `
 
+    if (!API_KEY) {
+        return {
+            answer: '',
+            papers: [],
+            summary: '',
+            validation: null
+        };
+    }
+
     try {
         const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
             {
@@ -52,8 +60,8 @@ async function summaryAgent(searchAgentAns, query) {
                 })
             });
         if (!response.ok) {
-            const responseText = response.text();
-            throw new Error(`${responseText}`);
+            const responseText = await response.text(); // await here
+            throw new Error(responseText);
         }
         const rawData = await response.json();
 
@@ -62,9 +70,9 @@ async function summaryAgent(searchAgentAns, query) {
         console.log("summaryAgent executed");
 
         return output;
-    } catch (error) {
-        console.log("Error in summary agent- " + error);
-        throw new Error();
+    } catch (e) {
+        // rethrow to be caught by controller next(err)
+        throw e;
     }
 }
 
