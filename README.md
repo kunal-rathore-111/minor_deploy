@@ -7,6 +7,9 @@
 
 > A powerful AI-driven backend system that helps researchers discover, analyze, and summarize academic papers using a multi-agent architecture powered by Google's Gemini AI and arXiv API.
 
+### Demo URL - https://minor-deploy-64gx.vercel.app
+### Demo Credentials - kunalx1@gmail.com, Pass- Kunal@1234 
+
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
